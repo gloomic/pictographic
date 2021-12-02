@@ -1,10 +1,11 @@
 const Image = {
+    chars: 'chars',
     charImageWidth: 256,
     charImageHeight: 256,
+
+    options: 'options',
     optionDefaultEmoji: '⬜',
     infoEmoji: '💡 ',
-
-    chars: 'chars',
 
     labels: 'labels.png',
     frameLogo: 'logo.png',

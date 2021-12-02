@@ -1,5 +1,6 @@
 import {Image, Style, QuestionType, StorageData} from '../common.js';
-import {levels} from '../data/data.js';
+import levels from '../data/data.js';
+import charMap from '../data/char-map.js';
 import {Storage} from '../utils/adapter.js';
 
 import Option from '../components/Option.js';
@@ -118,13 +119,15 @@ export default class GameScene extends Phaser.Scene {
         const emojiStyle = {
             fontFamily: Style.fontFamily,
             fontSize: Math.floor(Image.charImageWidth * 0.5),
-            color: Style.textColorStr,
+            color: Style.darkColorStr,
             padding: {y: Math.floor(Image.charImageWidth * 0.1)}
         };
+
+        const textFontSize = Math.floor(Image.charImageWidth / 4);
         const textStyle = {
             fontFamily: Style.fontFamily,
-            fontSize: Math.floor(Image.charImageWidth / 4),
-            color: Style.textColorStr
+            fontSize: textFontSize,
+            color: Style.darkColorStr
         };
 
         // Options.
@@ -141,11 +144,13 @@ export default class GameScene extends Phaser.Scene {
             x += centerX;
         }
 
-        // Info text.
+        // Info text. Multiple lines.
 
-        // textStyle.fontSize = Math.floor(Image.charImageWidth / 5);
         y += this.options[0].height + layout.margin;
-        this.infoText = this.add.text(layout.padding, y, '', textStyle);
+        textStyle.color = Style.textColorStr;
+        this.infoText = this.add.text(layout.padding, y, '', textStyle)
+            .setWordWrapWidth(width - layout.padding * 2 , false)
+            .setLineSpacing(Math.floor(textFontSize / 2));
 
         // Level text.
 
@@ -158,14 +163,19 @@ export default class GameScene extends Phaser.Scene {
     reset() {
         this.levelObj = levels[this.levelIndex];
         if (this.levelObj.type === QuestionType.trueFalse) {
-            this.charEvolution.setEvolutionChars(this.levelObj.evolutionChars);
+            let texture = charMap.get(this.levelObj.evolutionChars[0].image);
+            if (texture) {
+                console.log('no texture', this.levelObj.evolutionChars[0].image);
+            }
+            this.charEvolution.setEvolutionChars(texture, this.levelObj.evolutionChars);
             this.setOptions(this.levelObj.options);
         }
 
         // Hide evolution, info, continue button.
 
         this.infoText.setActive(false).setVisible(false);
-        this.levelText.setText(Math.floor((this.levelIndex + 1) / 11) * 10 + (this.levelIndex + 1) % 11);
+        // this.levelText.setText(Math.floor((this.levelIndex + 1) / 11) * 10 + (this.levelIndex + 1) % 11);
+        this.levelText.setText(this.levelIndex + 1);
         this.continueButton.setActive(false).setVisible(false);
 
         this.charIndex = 0;

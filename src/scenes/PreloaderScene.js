@@ -30,8 +30,12 @@ export default class PreloaderScene extends Phaser.Scene {
 
         this.load.setPath('assets/images/');
 
-        this.load.atlas(Image.chars, 'chars.png', 'chars.json');
         this.load.atlas(Image.labels, 'labels.png', 'labels.json');
+        this.load.atlas(Image.options, 'options.png', 'options.json');
+        const charsSpriteSheetCount = 7;
+        for (let i = 0; i < charsSpriteSheetCount; ++i) {
+            this.load.atlas(Image.chars + i, 'chars' + i + '.png', 'chars' + i + '.json');
+        }
 
         // Loading progress.
 

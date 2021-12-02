@@ -41,15 +41,16 @@ export default class CharEvolution extends Phaser.GameObjects.Container {
         this.hideEvolution();
     }
 
-    setEvolutionChars(evolutionChars) {
+    setEvolutionChars(texture, evolutionChars) {
         this.reset();
         this.evolutionChars = evolutionChars;
+        this.texture = texture;
 
         if (!this.mainCharImage) {
-            this.mainCharImage = this.scene.add.image(0, 0, CHARS_KEY, this.evolutionChars[0].image);
+            this.mainCharImage = this.scene.add.image(0, 0, this.texture, this.evolutionChars[0].image);
             this.add(this.mainCharImage);
         } else {
-            this.mainCharImage.setFrame(this.evolutionChars[0].image, false, false);
+            this.mainCharImage.setTexture(this.texture, this.evolutionChars[0].image);
         }
     }
 
@@ -105,14 +106,14 @@ export default class CharEvolution extends Phaser.GameObjects.Container {
             let evolutionChar = this.evolutionChars[i];
             let charImage = this.charImageGroup.getFirstDead();
             if (!charImage) {
-                charImage = this.scene.add.image(0, 0, CHARS_KEY, evolutionChar.image);
+                charImage = this.scene.add.image(0, 0, this.texture, evolutionChar.image);
                 if (this.charImageScale > 0) {
                     charImage.setScale(this.charImageScale);
                 }
                 this.charImageGroup.add(charImage);
                 this.add(charImage);
             } else {
-                charImage.setFrame(evolutionChar.image, false, false);
+                charImage.setTexture(this.texture, evolutionChar.image);
             }
             let layout = this.charImageLayout[evolutionChar.glyph];
             charImage.setPosition(layout.x, layout.y)

@@ -7,13 +7,15 @@ let optionTextureCreated = false;
  * A question option with an emoji/image, a text and a answer mark.
  */
 export default class Option extends Phaser.GameObjects.Container {
-    constructor(scene, x, y, optionConfig, emojiStyle, textStyle, style) {
+
+    // x and y indicates the center position of the position.
+    constructor(scene, x, y, optionConfig, emojiStyle, textStyle, bgStyle) {
         super(scene, x, y);
 
         if (!optionTextureCreated) {
-            let w = Math.floor(emojiStyle.fontSize * 3.84);
-            let h = Math.floor(emojiStyle.fontSize * 2.8);
-            this.createTextures(w, h, style);
+            let w = Math.floor(emojiStyle.fontSize * 4);
+            let h = Math.floor(emojiStyle.fontSize * 3);
+            this.createTextures(w, h, bgStyle);
         }
 
         // Background
@@ -31,15 +33,18 @@ export default class Option extends Phaser.GameObjects.Container {
         // Emoji
 
         x = 0;
-        y = - this.height * 0.5 + this.height * 0.08;
-        this.imageText = this.scene.add.text(x, y, optionConfig.image, emojiStyle).setOrigin(0.5, 0);
+        y = - this.height * 0.15;
+        this.imageText = this.scene.add.text(x, y, optionConfig.image, emojiStyle).setOrigin(0.5, 0.5);
         this.add(this.imageText);
+
+        this.image = this.scene.add.image(x, y, 'options', null);
+        this.add(this.image);
 
         // Text
 
         let imageWidth = this.imageText.displayWidth;
         this.text = this.scene.add.text(x, 0, optionConfig.text, textStyle).setOrigin(0.5, 0);
-        this.text.y = y + this.imageText.displayHeight * 1.1;
+        this.text.y = y + this.imageText.displayHeight * 0.6;
         this.add(this.text);
 
         // Mark
@@ -70,7 +75,14 @@ export default class Option extends Phaser.GameObjects.Container {
     }
 
     setConfig(optionConfig) {
-        this.imageText.setText(optionConfig.image);
+        if (optionConfig.image.endsWith('.png')) {
+            this.image.setFrame(optionConfig.image, false, false).setActive(true).setVisible(true);
+            this.imageText.setActive(false).setVisible(false);
+
+        } else {
+            this.imageText.setText(optionConfig.image).setActive(true).setVisible(true);
+            this.image.setActive(false).setVisible(false);
+        }
         this.text.setText(optionConfig.text);
         this.isAnswer = optionConfig.isAnswer;
 
@@ -115,11 +127,18 @@ export default class Option extends Phaser.GameObjects.Container {
         x = y = borderWidth / 2;
         let rw = w - borderWidth;
         let rh = h - borderWidth;
+
         graphics.lineStyle(borderWidth, style.optionBorderColor);
         graphics.strokeRect(x, y, rw, rh);
+
+        graphics.fillStyle(style.foregroundColor)
+        graphics.fillRect(x * 4, y * 4, rw - borderWidth * 3, rh - borderWidth * 3);
+
         graphics.generateTexture(OPTION_BG_KEY, w, h);
 
         graphics.clear();
+        graphics.fillStyle(style.foregroundColor)
+        graphics.fillRect(x * 4, y * 4, rw - borderWidth * 3, rh - borderWidth * 3);
         graphics.lineStyle(borderWidth, style.optionBoderHighlightColor);
         graphics.strokeRect(x, y, rw, rh);
         graphics.generateTexture(OPTION_BG_HIGHLIGHT_KEY, w, h);
