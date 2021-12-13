@@ -17,7 +17,15 @@ const Image = {
     frameMute: 'mute.png',
     frameHint: 'eye.png',
     frameClose: 'close.png'
-}
+};
+
+const Audio = {
+    true: 'true',
+    false: 'false',
+    click: 'click',
+    ready: 'ready',
+    playGame: 'playGame'
+};
 
 const Style = {
     fontFamily: 'Helvetica, Arial',
@@ -39,15 +47,15 @@ const Style = {
 
     optionBorderColor: 0x989085,
     optionBoderHighlightColor: 0xd79468
-}
+};
 
 const QuestionType = {
     trueFalse: 'true-false',
     test: 'test'
-}
+};
 
 const StorageData = {
     key: 'pctgp-data'
-}
+};
 
-export {Image, Style, QuestionType, StorageData};
+export {Image, Audio, Style, QuestionType, StorageData};

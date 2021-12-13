@@ -1,4 +1,4 @@
-import {Image} from '../common.js';
+import {Image, Audio} from '../common.js';
 
 /**
  * Dislay game logo, title and play button.
@@ -23,6 +23,7 @@ export default class MainMenuScene extends Phaser.Scene {
         this.add.image(centerX, y, Image.labels, Image.framePlayButton)
             .setInteractive()
             .on('pointerup', () => {
+                this.sound.play(Audio.playGame);
                 this.scene.start('GameScene');
             }
         );

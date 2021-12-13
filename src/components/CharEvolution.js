@@ -12,7 +12,7 @@ export default class CharEvolution extends Phaser.GameObjects.Container {
         super(scene, x, y);
 
         this.width = width;
-        this.height = Math.floor(charImageWidth * 4); // Evolution line height + height of 3 chars.
+        this.height = Math.floor(charImageWidth * 3); // Evolution line height + height of 2 chars.
 
         this.charImageWidth = this.charImageHeight = charImageWidth;
         this.charImageStepH = Math.floor(this.charImageHeight * 1.1);
@@ -26,7 +26,9 @@ export default class CharEvolution extends Phaser.GameObjects.Container {
 
         this.evolutionChars = evolutionChars;
         this.charImageGroup = this.scene.add.group();
-        this.mainCharImage = null;
+        this.mainCharImage = this.scene.add.image(0, 0, null);
+        this.mainCharImage.targetY = Math.floor(this.height / 4);
+        this.add(this.mainCharImage);
 
         // State
 
@@ -46,12 +48,7 @@ export default class CharEvolution extends Phaser.GameObjects.Container {
         this.evolutionChars = evolutionChars;
         this.texture = texture;
 
-        if (!this.mainCharImage) {
-            this.mainCharImage = this.scene.add.image(0, 0, this.texture, this.evolutionChars[0].image);
-            this.add(this.mainCharImage);
-        } else {
-            this.mainCharImage.setTexture(this.texture, this.evolutionChars[0].image);
-        }
+        this.mainCharImage.setTexture(this.texture, this.evolutionChars[0].image);
     }
 
     createBgAndEvolutionLine(style) {
@@ -97,7 +94,10 @@ export default class CharEvolution extends Phaser.GameObjects.Container {
         this.add(this.evolutionLine);
     }
 
-    showCharImages(count = 1) {
+    /**
+     * Show evolution chars of the specified count.
+     */
+    showCharImages(count = 1, duration = 1000, delay = 0) {
         if (!this.evolutionChars) {
             return;
         }
@@ -118,6 +118,13 @@ export default class CharEvolution extends Phaser.GameObjects.Container {
             let layout = this.charImageLayout[evolutionChar.glyph];
             charImage.setPosition(layout.x, layout.y)
                 .setActive(true).setVisible(true);
+            this.scene.tweens.add({
+                targets: charImage.setAlpha(0),
+                alpha: 1,
+                ease: 'Sine.easeInOut',
+                delay: delay,
+                duration: duration
+            });
 
             this.charIndex++;
 
@@ -127,13 +134,15 @@ export default class CharEvolution extends Phaser.GameObjects.Container {
         }
     }
 
-    showEvolution() {
+    showEvolution(tweenDuration = 1000) {
         this.evolutionLine.setActive(true).setVisible(true);
-        this.showCharImages(-1);
+        this.mainCharImage.setPosition(0, this.mainCharImage.targetY);
+        this.showCharImages(-1, tweenDuration);
     }
 
     hideEvolution() {
         this.evolutionLine.setActive(false).setVisible(false);
+        this.mainCharImage.setPosition(0, 0);
         this.charImageGroup.getChildren().forEach(e => e.setActive(false).setVisible(false));
     }
 

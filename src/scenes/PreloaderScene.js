@@ -1,4 +1,4 @@
-import {Image, Style, StorageData} from '../common.js';
+import {Image, Audio, Style, StorageData} from '../common.js';
 import {Storage} from '../utils/adapter.js';
 
 export default class PreloaderScene extends Phaser.Scene {
@@ -36,6 +36,14 @@ export default class PreloaderScene extends Phaser.Scene {
         for (let i = 0; i < charsSpriteSheetCount; ++i) {
             this.load.atlas(Image.chars + i, 'chars' + i + '.png', 'chars' + i + '.json');
         }
+
+        this.load.setPath('assets/audio/');
+
+        this.load.audio(Audio.true, 'true.mp3');
+        this.load.audio(Audio.false, 'false.mp3');
+        this.load.audio(Audio.click, 'click.mp3');
+        this.load.audio(Audio.playGame, 'playGame.mp3');
+        this.load.audio(Audio.ready, 'ready.mp3');
 
         // Loading progress.
 

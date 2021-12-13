@@ -1,4 +1,4 @@
-import {Image, Style, QuestionType, StorageData} from '../common.js';
+import {Image, Audio, Style, QuestionType, StorageData} from '../common.js';
 import levels from '../data/data.js';
 import charMap from '../data/char-map.js';
 import {Storage} from '../utils/adapter.js';
@@ -40,7 +40,10 @@ export default class GameScene extends Phaser.Scene {
     create() {
         let layout = this.initLayout();
 
-        //---------------- Char evolution, options and texts.
+        //---------------- Dashboard,  char evolution, options and action bar.
+
+        // Dashboard
+        this.createDashboard(layout);
 
         // Char evolution.
         this.charEvolution = new CharEvolution(this, layout.charEvolutionX, layout.charEvolutionY,
@@ -70,18 +73,24 @@ export default class GameScene extends Phaser.Scene {
             });
         }
 
-       this.reset();
+        //---------------- Volume
+        this.sound.volume = 0.4;
+        this.clickSound = this.sound.add(Audio.click, {volume: 0.3});
+
+        this.reset();
     }
 
     initLayout() {
         let padding = Math.floor(height * 0.02);
+        let dashboardHeight = Math.floor(Image.charImageHeight / 2);
 
         let layout = {
             padding: padding,
             margin: padding * 2,
+            dashboardHeight: dashboardHeight,
 
             charEvolutionX: centerX,
-            charEvolutionY: padding
+            charEvolutionY: padding + dashboardHeight + padding
         };
 
         if (DEBUG) {
@@ -115,56 +124,68 @@ export default class GameScene extends Phaser.Scene {
         });
     }
 
-    createOptionsAndTexts(topY, layout) {
-        const emojiStyle = {
+    createDashboard(layout) {
+        let height = layout.dashboardHeight;
+        let fontSize = Math.floor(height * 0.8);
+        const textStyle = {
             fontFamily: Style.fontFamily,
-            fontSize: Math.floor(Image.charImageWidth * 0.5),
-            color: Style.darkColorStr,
-            padding: {y: Math.floor(Image.charImageWidth * 0.1)}
+            fontSize: fontSize,
+            color: Style.lightColorStr
         };
 
+        let x = centerX;
+        let y = Math.floor(layout.padding + height / 2);
+        this.levelText = this.add.text(x, y, '', textStyle).setOrigin(0.5, 0.5);
+    }
+
+    createOptionsAndTexts(topY, layout) {
         const textFontSize = Math.floor(Image.charImageWidth / 4);
         const textStyle = {
             fontFamily: Style.fontFamily,
             fontSize: textFontSize,
             color: Style.darkColorStr
         };
+        const style = {
+            emojiStyle: {
+                    fontFamily: Style.fontFamily,
+                    fontSize: Math.floor(Image.charImageWidth * 0.5),
+                    color: Style.darkColorStr,
+                    padding: {y: Math.floor(Image.charImageWidth * 0.1)}
+            },
+            textStyle: textStyle,
+            bgStyle: Style
+        };
 
         // Options.
 
         let x = width / 4;
         let y = topY + layout.margin;
+        let w = Image.charImageWidth * 2;
+        let h = Math.floor(Image.charImageWidth * 1.5);
         this.options = new Array(2);
         const optionConfig = {image: Image.optionDefaultEmoji, text: '', isAnswer: false};
         for (let i = 0; i < this.options.length; ++i) {
-            this.options[i] = new Option(this, x, y, optionConfig, emojiStyle, textStyle, Style);
+            this.options[i] = new Option(this, x, y, w, h, optionConfig, style);
             this.options[i].y += this.options[i].height * 0.5;
             this.options[i].setCallback(this.onOptionClicked);
 
             x += centerX;
         }
 
-        // Info text. Multiple lines.
+        // Info text in multiple lines.
 
         y += this.options[0].height + layout.margin;
         textStyle.color = Style.textColorStr;
         this.infoText = this.add.text(layout.padding, y, '', textStyle)
             .setWordWrapWidth(width - layout.padding * 2 , false)
             .setLineSpacing(Math.floor(textFontSize / 2));
-
-        // Level text.
-
-        textStyle.color = Style.highlightColor;
-        textStyle.fontSize = Math.floor(Image.charImageWidth / 2);
-        y += this.options[0].height + layout.margin;
-        this.levelText = this.add.text(centerX, topY - textStyle.fontSize, '', textStyle).setOrigin(0.5, 0.5);
     }
 
     reset() {
         this.levelObj = levels[this.levelIndex];
         if (this.levelObj.type === QuestionType.trueFalse) {
             let texture = charMap.get(this.levelObj.evolutionChars[0].image);
-            if (texture) {
+            if (DEBUG && !texture) {
                 console.log('no texture', this.levelObj.evolutionChars[0].image);
             }
             this.charEvolution.setEvolutionChars(texture, this.levelObj.evolutionChars);
@@ -174,7 +195,6 @@ export default class GameScene extends Phaser.Scene {
         // Hide evolution, info, continue button.
 
         this.infoText.setActive(false).setVisible(false);
-        // this.levelText.setText(Math.floor((this.levelIndex + 1) / 11) * 10 + (this.levelIndex + 1) % 11);
         this.levelText.setText(this.levelIndex + 1);
         this.continueButton.setActive(false).setVisible(false);
 
@@ -198,14 +218,21 @@ export default class GameScene extends Phaser.Scene {
      * Show evolution, info and continues button.
      */
     showGameOver() {
-        console.log('showGameOver');
-        this.charEvolution.showEvolution();
+        this.charEvolution.showEvolution(1500);
         if (this.levelObj.info) {
             this.infoText.setText(Image.infoEmoji + this.levelObj.info).setActive(true).setVisible(true);
         }
 
         if ((this.levelIndex + 1) < levels.length) { // Not the last level
             this.continueButton.setActive(true).setVisible(true);
+            this.tweens.add({
+                targets: this.continueButton.setAlpha(0),
+                alpha: 1,
+                ease: 'Power3',
+                delay: 1000,
+                duration: 500,
+                onStart: () => this.sound.play(Audio.ready)
+            });
         }
     }
 
@@ -233,6 +260,7 @@ export default class GameScene extends Phaser.Scene {
             console.log('Continue button is clicked');
         }
 
+        this.clickSound.play();
         this.nextLevel();
     }
 
@@ -246,6 +274,7 @@ export default class GameScene extends Phaser.Scene {
             console.log('win');
         }
 
+        this.sound.play(Audio.true);
         this.time.delayedCall(500, this.showGameOver, [], this);
     }
 
@@ -254,6 +283,7 @@ export default class GameScene extends Phaser.Scene {
             console.log('lose');
         }
 
+        this.sound.play(Audio.false);
         this.time.delayedCall(500, this.showGameOver, [], this);
     }
 }

@@ -9,22 +9,20 @@ let optionTextureCreated = false;
 export default class Option extends Phaser.GameObjects.Container {
 
     // x and y indicates the center position of the position.
-    constructor(scene, x, y, optionConfig, emojiStyle, textStyle, bgStyle) {
+    constructor(scene, x, y, w, h, optionConfig, style) {
         super(scene, x, y);
 
+        this.width = w;
+        this.height = h;
         if (!optionTextureCreated) {
-            let w = Math.floor(emojiStyle.fontSize * 4);
-            let h = Math.floor(emojiStyle.fontSize * 3);
-            this.createTextures(w, h, bgStyle);
+            this.createTextures(w, h, style.bgStyle);
+            optionTextureCreated = true;
         }
 
         // Background
 
         this.bgImage = this.scene.add.image(0, 0, OPTION_BG_KEY);
         this.add(this.bgImage);
-
-        this.width = this.bgImage.displayWidth;
-        this.height = this.bgImage.displayHeight;
 
         if (DEBUG) {
             console.log('option.size, w=%d, h=%d', this.width, this.height);
@@ -34,7 +32,7 @@ export default class Option extends Phaser.GameObjects.Container {
 
         x = 0;
         y = - this.height * 0.15;
-        this.imageText = this.scene.add.text(x, y, optionConfig.image, emojiStyle).setOrigin(0.5, 0.5);
+        this.imageText = this.scene.add.text(x, y, optionConfig.image, style.emojiStyle).setOrigin(0.5, 0.5);
         this.add(this.imageText);
 
         this.image = this.scene.add.image(x, y, 'options', null);
@@ -43,7 +41,7 @@ export default class Option extends Phaser.GameObjects.Container {
         // Text
 
         let imageWidth = this.imageText.displayWidth;
-        this.text = this.scene.add.text(x, 0, optionConfig.text, textStyle).setOrigin(0.5, 0);
+        this.text = this.scene.add.text(x, 0, optionConfig.text, style.textStyle).setOrigin(0.5, 0);
         this.text.y = y + this.imageText.displayHeight * 0.6;
         this.add(this.text);
 
@@ -115,8 +113,6 @@ export default class Option extends Phaser.GameObjects.Container {
         if (this.scene.textures.exists(OPTION_BG_KEY)) {
             return;
         }
-
-        optionTextureCreated = true;
 
         const graphics = this.scene.make.graphics();
 
