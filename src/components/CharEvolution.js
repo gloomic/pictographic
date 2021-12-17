@@ -30,6 +30,13 @@ export default class CharEvolution extends Phaser.GameObjects.Container {
         this.mainCharImage.targetY = Math.floor(this.height / 4);
         this.add(this.mainCharImage);
 
+        // Hint char image
+        this.hintCharImage = this.scene.add.image(0, this.mainCharImage.targetY, null)
+            .setActive(false).setVisible(false);
+        this.hintCharImage.rightTargetX = Math.floor(this.charImageWidth * 1.5);
+        this.hintCharImage.leftTargetX = -this.hintCharImage.rightTargetX;
+        this.add(this.hintCharImage);
+
         // State
 
         this.charIndex = 0;
@@ -144,6 +151,16 @@ export default class CharEvolution extends Phaser.GameObjects.Container {
         this.evolutionLine.setActive(false).setVisible(false);
         this.mainCharImage.setPosition(0, 0);
         this.charImageGroup.getChildren().forEach(e => e.setActive(false).setVisible(false));
+    }
+
+    showHintChar(glyph, image) {
+        this.hintCharImage.x = (glyph === 'Oracle') ?
+            this.hintCharImage.leftTargetX : this.hintCharImage.rightTargetX;
+        this.hintCharImage.setTexture(this.texture, image).setActive(true).setVisible(true);
+    }
+
+    hideHintChar() {
+        this.hintCharImage.setActive(false).setVisible(false);
     }
 
     /**

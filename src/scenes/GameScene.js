@@ -108,7 +108,9 @@ export default class GameScene extends Phaser.Scene {
         this.muteButton = this.add.image(0, 0, Image.labels, Image.frameMenu);
         this.continueButton = this.add.image(0, 0, Image.labels, Image.frameContinue)
             .setInteractive().on('pointerup', this.onContinueButtonClicked, this);
-        this.hintButton = this.add.image(0, 0, Image.labels, Image.frameHint);
+        this.hintButton = this.add.image(0, 0, Image.labels, Image.frameHint)
+            .setInteractive().on('pointerup', this.onHintButtonClicked, this);
+        this.hintButton.disabledAlpha = 0.3;
 
         let buttons = [this.muteButton, this.continueButton, this.hintButton];
         let cellW = Math.floor((width - layout.padding * 2) / buttons.length);
@@ -189,6 +191,7 @@ export default class GameScene extends Phaser.Scene {
                 console.log('no texture', this.levelObj.evolutionChars[0].image);
             }
             this.charEvolution.setEvolutionChars(texture, this.levelObj.evolutionChars);
+            this.charEvolution.hideHintChar();
             this.setOptions(this.levelObj.options);
         }
 
@@ -197,9 +200,14 @@ export default class GameScene extends Phaser.Scene {
         this.infoText.setActive(false).setVisible(false);
         this.levelText.setText(this.levelIndex + 1);
         this.continueButton.setActive(false).setVisible(false);
+        this.hintButton.setAlpha(this.levelObj.hint.image ? 1 : this.hintButton.disabledAlpha);
 
         this.charIndex = 0;
         this.answered = false;
+
+        if (DEBUG) {
+            console.log('Level', this.levelIndex + 1, this.levelObj.char);
+        }
     }
 
     setOptions(options) {
@@ -237,10 +245,6 @@ export default class GameScene extends Phaser.Scene {
     }
 
     onOptionClicked(optionGameObject) {
-        if (DEBUG) {
-            console.log('onOptionClicked');
-        }
-
         if (!this.answered) {
             optionGameObject.highlight();
             optionGameObject.showAnswer();
@@ -256,10 +260,6 @@ export default class GameScene extends Phaser.Scene {
     }
 
     onContinueButtonClicked() {
-        if (DEBUG) {
-            console.log('Continue button is clicked');
-        }
-
         this.clickSound.play();
         this.nextLevel();
     }
@@ -285,5 +285,11 @@ export default class GameScene extends Phaser.Scene {
 
         this.sound.play(Audio.false);
         this.time.delayedCall(500, this.showGameOver, [], this);
+    }
+
+    onHintButtonClicked() {
+        this.clickSound.play();
+        this.charEvolution.showHintChar(this.levelObj.hint.text, this.levelObj.hint.image);
+        this.hintButton.setAlpha(this.hintButton.disabledAlpha);
     }
 }

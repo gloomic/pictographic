@@ -118,7 +118,7 @@ export default class Option extends Phaser.GameObjects.Container {
 
         let x = 0, y = 0;
 
-        let borderWidth = Math.max(Math.floor(w * 0.015), 4);
+        let borderWidth = Math.max(Math.floor(w * 0.01), 4);
         borderWidth += (borderWidth / 2 === 0) ? 0 : 1;
         x = y = borderWidth / 2;
         let rw = w - borderWidth;
@@ -127,14 +127,15 @@ export default class Option extends Phaser.GameObjects.Container {
         graphics.lineStyle(borderWidth, style.optionBorderColor);
         graphics.strokeRect(x, y, rw, rh);
 
-        graphics.fillStyle(style.foregroundColor)
-        graphics.fillRect(x * 4, y * 4, rw - borderWidth * 3, rh - borderWidth * 3);
+        let padding = borderWidth * 3;
+        graphics.fillStyle(style.foregroundColor);
+        graphics.fillRect(x + padding, y + padding, rw - padding * 2, rh - padding * 2);
 
         graphics.generateTexture(OPTION_BG_KEY, w, h);
 
         graphics.clear();
         graphics.fillStyle(style.foregroundColor)
-        graphics.fillRect(x * 4, y * 4, rw - borderWidth * 3, rh - borderWidth * 3);
+        graphics.fillRect(x + padding, y + padding, rw - padding * 2, rh - padding * 2);
         graphics.lineStyle(borderWidth, style.optionBoderHighlightColor);
         graphics.strokeRect(x, y, rw, rh);
         graphics.generateTexture(OPTION_BG_HIGHLIGHT_KEY, w, h);
