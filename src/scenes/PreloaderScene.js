@@ -1,5 +1,5 @@
 import {Image, Audio, Style, StorageData} from '../common.js';
-import {Storage} from '../utils/adapter.js';
+import Storage from '../utils/Storage.js';
 
 export default class PreloaderScene extends Phaser.Scene {
     constructor() {

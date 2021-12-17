@@ -1,7 +1,7 @@
 import {Image, Audio, Style, QuestionType, StorageData} from '../common.js';
 import levels from '../data/data.js';
 import charMap from '../data/char-map.js';
-import {Storage} from '../utils/adapter.js';
+import Storage from '../utils/Storage.js';
 
 import Option from '../components/Option.js';
 import CharEvolution from '../components/CharEvolution.js';
@@ -64,18 +64,38 @@ export default class GameScene extends Phaser.Scene {
         // Action bar.
         this.createActionBar(layout);
 
-        //---------------- Storage.
-
-        if (!this.game.registry.get(StorageData.key)) {
-            Storage.set(StorageData.key, {
-                levelIndex: this.levelIndex,
-                points: 0
-            });
-        }
-
         //---------------- Volume
+
         this.sound.volume = 0.4;
         this.clickSound = this.sound.add(Audio.click, {volume: 0.3});
+
+        //---------------- Storage.
+
+        this.storageData = this.game.registry.get(StorageData.key);
+        if (!this.storageData) {
+            this.storageData = {
+                levelIndex: this.levelIndex,
+                points: 0,
+                levelResult: new Array(levels.length)
+            };
+            for (let i = 0; i < this.storageData.levelResult.length; ++i) {
+                this.storageData.levelResult[i] = -1; // -1 indicates locked, 0 indicates failed, 1 indicates passed
+            }
+
+            this.game.registry.set(StorageData.key, this.storageData);
+            Storage.set(Storage.key, this.storageData);
+        }
+        // console.log(JSON.stringify(this.storageData));
+
+        if (this.storageData.levelIndex < 0) {
+            this.storageData.levelIndex = 0;
+        } else if (this.storageData.levelIndex + 1 >= levels.length) {
+            this.storageData.levelIndex = levels.length - 1;
+        }
+
+        this.levelIndex = this.storageData.levelIndex;
+
+        //---------------- Start
 
         this.reset();
     }
@@ -276,6 +296,8 @@ export default class GameScene extends Phaser.Scene {
 
         this.sound.play(Audio.true);
         this.time.delayedCall(500, this.showGameOver, [], this);
+
+        this.saveStorage(this.levelIndex, 1);
     }
 
     loseGame() {
@@ -285,6 +307,20 @@ export default class GameScene extends Phaser.Scene {
 
         this.sound.play(Audio.false);
         this.time.delayedCall(500, this.showGameOver, [], this);
+
+        this.saveStorage(this.levelIndex, 0);
+    }
+
+    /**
+     * Update storage once a level has been completed.
+     *
+     * @param {*} levelIndex The level index of the level that has just been finished.
+     * @param {*} passed Whether the level is passed, 1 indicates passed, otherwise 0.
+     */
+    saveStorage(levelIndex, passedState) {
+        this.storageData.levelIndex = (levelIndex + 1) >= levels.length ? levelIndex : levelIndex + 1;
+        this.storageData.levelResult[levelIndex] = passedState;
+        Storage.set(StorageData.key, this.storageData);
     }
 
     onHintButtonClicked() {
