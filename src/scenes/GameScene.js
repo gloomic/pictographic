@@ -220,7 +220,11 @@ export default class GameScene extends Phaser.Scene {
         this.infoText.setActive(false).setVisible(false);
         this.levelText.setText(this.levelIndex + 1);
         this.continueButton.setActive(false).setVisible(false);
-        this.hintButton.setAlpha(this.levelObj.hint.image ? 1 : this.hintButton.disabledAlpha);
+        if (this.levelObj.hint.image) {
+            this.hintButton.setAlpha(1).setInteractive();
+        } else {
+            this.hintButton.setAlpha(this.hintButton.disabledAlpha).disableInteractive();
+        }
 
         this.charIndex = 0;
         this.answered = false;
@@ -326,6 +330,6 @@ export default class GameScene extends Phaser.Scene {
     onHintButtonClicked() {
         this.clickSound.play();
         this.charEvolution.showHintChar(this.levelObj.hint.text, this.levelObj.hint.image);
-        this.hintButton.setAlpha(this.hintButton.disabledAlpha);
+        this.hintButton.setAlpha(this.hintButton.disabledAlpha).disableInteractive();
     }
 }
