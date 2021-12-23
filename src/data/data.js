@@ -705,23 +705,23 @@ const levels = [
         "evolutionChars": [
             {
                 "glyph": "oracle",
-                "image": "lin-forest-oracle-0.png"
+                "image": "lin-woods-oracle-0.png"
             },
             {
                 "glyph": "bronze",
-                "image": "lin-forest-bronze-0.png"
+                "image": "lin-woods-bronze-0.png"
             },
             {
                 "glyph": "seal",
-                "image": "lin-forest-seal-0.png"
+                "image": "lin-woods-seal-0.png"
             },
             {
                 "glyph": "clerical",
-                "image": "lin-forest-clerical-0.png"
+                "image": "lin-woods-clerical-0.png"
             },
             {
                 "glyph": "regular",
-                "image": "lin-forest-regular-0.png"
+                "image": "lin-woods-regular-0.png"
             }
         ],
         "options": [
@@ -3249,23 +3249,23 @@ const levels = [
         "evolutionChars": [
             {
                 "glyph": "oracle",
-                "image": "jian-arrow-oracle-0.png"
+                "image": "shi-arrow-oracle-0.png"
             },
             {
                 "glyph": "bronze",
-                "image": "jian-arrow-bronze-0.png"
+                "image": "shi-arrow-bronze-0.png"
             },
             {
                 "glyph": "seal",
-                "image": "jian-arrow-seal-0.png"
+                "image": "shi-arrow-seal-0.png"
             },
             {
                 "glyph": "clerical",
-                "image": "jian-arrow-clerical-0.png"
+                "image": "shi-arrow-clerical-0.png"
             },
             {
                 "glyph": "regular",
-                "image": "jian-arrow-regular-0.png"
+                "image": "shi-arrow-regular-0.png"
             }
         ],
         "options": [

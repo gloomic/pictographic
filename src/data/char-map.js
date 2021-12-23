@@ -336,23 +336,23 @@ const charMap = new Map([
         "chars1"
     ],
     [
-        "lin-forest-oracle-0.png",
+        "lin-woods-oracle-0.png",
         "chars1"
     ],
     [
-        "lin-forest-bronze-0.png",
+        "lin-woods-bronze-0.png",
         "chars1"
     ],
     [
-        "lin-forest-seal-0.png",
+        "lin-woods-seal-0.png",
         "chars1"
     ],
     [
-        "lin-forest-clerical-0.png",
+        "lin-woods-clerical-0.png",
         "chars1"
     ],
     [
-        "lin-forest-regular-0.png",
+        "lin-woods-regular-0.png",
         "chars1"
     ],
     [
@@ -1540,23 +1540,23 @@ const charMap = new Map([
         "chars6"
     ],
     [
-        "jian-arrow-oracle-0.png",
+        "shi-arrow-oracle-0.png",
         "chars6"
     ],
     [
-        "jian-arrow-bronze-0.png",
+        "shi-arrow-bronze-0.png",
         "chars6"
     ],
     [
-        "jian-arrow-seal-0.png",
+        "shi-arrow-seal-0.png",
         "chars6"
     ],
     [
-        "jian-arrow-clerical-0.png",
+        "shi-arrow-clerical-0.png",
         "chars6"
     ],
     [
-        "jian-arrow-regular-0.png",
+        "shi-arrow-regular-0.png",
         "chars6"
     ],
     [
