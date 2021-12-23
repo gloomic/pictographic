@@ -8,7 +8,7 @@ let optionTextureCreated = false;
  */
 export default class Option extends Phaser.GameObjects.Container {
 
-    // x and y indicates the center position of the position.
+    // x and y indicates the center position of the option.
     constructor(scene, x, y, w, h, optionConfig, style) {
         super(scene, x, y);
 

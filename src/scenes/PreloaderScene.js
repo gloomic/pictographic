@@ -30,6 +30,7 @@ export default class PreloaderScene extends Phaser.Scene {
 
         this.load.setPath('assets/images/');
 
+        this.load.atlas(Image.levelChars, 'level-chars.png', 'level-chars.json');
         this.load.atlas(Image.labels, 'labels.png', 'labels.json');
         this.load.atlas(Image.options, 'options.png', 'options.json');
         const charsSpriteSheetCount = 7;

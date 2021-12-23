@@ -23,6 +23,7 @@ function getSizeAccordingToRatio() {
         width: 1500, // 1125,  // 375 x 4
         height: 2400 // 1800 // 600 * 4
     }
+    window.portraitWidth = desiredPortraitSize.width;
 
     const minLandscapeAspectRatio = desiredLandscapeSize.width / desiredLandscapeSize.height;
     const maxLandscapeAspectRatio = 1.5;

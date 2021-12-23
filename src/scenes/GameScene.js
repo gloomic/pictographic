@@ -1,10 +1,11 @@
-import {Image, Audio, Style, QuestionType, StorageData} from '../common.js';
+import {Image, Audio, Style, Layout, QuestionType, StorageData} from '../common.js';
 import levels from '../data/data.js';
 import charMap from '../data/char-map.js';
 import Storage from '../utils/Storage.js';
 
 import Option from '../components/Option.js';
 import CharEvolution from '../components/CharEvolution.js';
+import MenuDialog from '../components/MenuDialog.js';
 
 export default class GameScene extends Phaser.Scene {
 
@@ -20,6 +21,9 @@ export default class GameScene extends Phaser.Scene {
         this.continueButton;
         this.menuButton;
         this.hintButton;
+        // It needs to switch their visibility to avoid interactive issue of overlapped widgets
+        // on dialog showing/hiding.
+        this.interactiveChildren = [];
 
         // Sizes.
 
@@ -101,7 +105,7 @@ export default class GameScene extends Phaser.Scene {
     }
 
     initLayout() {
-        let padding = Math.floor(height * 0.02);
+        let padding = Math.floor(height * Layout.paddingHeightRatio);
         let dashboardHeight = Math.floor(Image.charImageHeight / 2);
 
         let layout = {
@@ -125,14 +129,15 @@ export default class GameScene extends Phaser.Scene {
 
     // Menu, continue, hint button.
     createActionBar(layout) {
-        this.muteButton = this.add.image(0, 0, Image.labels, Image.frameMenu);
+        this.menuButton = this.add.image(0, 0, Image.labels, Image.frameMenu)
+            .setInteractive().on('pointerup', this.onMenuButtonClicked, this);
         this.continueButton = this.add.image(0, 0, Image.labels, Image.frameContinue)
             .setInteractive().on('pointerup', this.onContinueButtonClicked, this);
         this.hintButton = this.add.image(0, 0, Image.labels, Image.frameHint)
             .setInteractive().on('pointerup', this.onHintButtonClicked, this);
         this.hintButton.disabledAlpha = 0.3;
 
-        let buttons = [this.muteButton, this.continueButton, this.hintButton];
+        let buttons = [this.menuButton, this.continueButton, this.hintButton];
         let cellW = Math.floor((width - layout.padding * 2) / buttons.length);
         let cellH = this.continueButton.displayHeight;
         Phaser.Actions.GridAlign(buttons, {
@@ -144,6 +149,9 @@ export default class GameScene extends Phaser.Scene {
             x: (width - cellW * buttons.length) / 2 + cellW / 2,
             y: (height - layout.padding) - cellH / 2
         });
+        buttons.forEach(e => this.interactiveChildren.push(e));
+
+        this.menuDialog = new MenuDialog(this);
     }
 
     createDashboard(layout) {
@@ -193,6 +201,7 @@ export default class GameScene extends Phaser.Scene {
 
             x += centerX;
         }
+        this.options.forEach(e => this.interactiveChildren.push(e));
 
         // Info text in multiple lines.
 
@@ -283,13 +292,24 @@ export default class GameScene extends Phaser.Scene {
         }
     }
 
+    onMenuButtonClicked() {
+        this.playClickSound();
+        this.onDialogOpend();
+        this.menuDialog.show();
+    }
+
     onContinueButtonClicked() {
-        this.clickSound.play();
+        this.playClickSound();
         this.nextLevel();
     }
 
     nextLevel() {
         this.levelIndex++;
+        this.reset();
+    }
+
+    gotoLevel(levelIndex) {
+        this.levelIndex = levelIndex;
         this.reset();
     }
 
@@ -328,8 +348,27 @@ export default class GameScene extends Phaser.Scene {
     }
 
     onHintButtonClicked() {
-        this.clickSound.play();
+        this.playClickSound();
         this.charEvolution.showHintChar(this.levelObj.hint.text, this.levelObj.hint.image);
         this.hintButton.setAlpha(this.hintButton.disabledAlpha).disableInteractive();
+    }
+
+    playClickSound() {
+        this.clickSound.play();
+    }
+
+    onDialogOpend() {
+        // Important! Close the visibility of interactive widgets to avoid error in HTMLCanvasElement.onMouseUp
+        // while the pointer is going over the overlaped and interactive widgets.
+        this.interactiveChildren.forEach(e => e.setVisible(false));
+    }
+
+    onDialogClosed() {
+        // Restore the visibility of interactive widgets that have been closed in onDialogOpened.
+        this.interactiveChildren.forEach(e => {
+            if (e.active) { // Only restore visibility to true for widigets that have been visible before.
+                e.setVisible(true);
+            }
+        });
     }
 }

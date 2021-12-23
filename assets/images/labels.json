@@ -2,8 +2,8 @@
 	"frames": {
 		"close.png": {
 			"frame": {
-				"x": 0,
-				"y": 0,
+				"x": 1,
+				"y": 1,
 				"w": 128,
 				"h": 128
 			},
@@ -22,8 +22,8 @@
 		},
 		"continue.png": {
 			"frame": {
-				"x": 128,
-				"y": 0,
+				"x": 131,
+				"y": 1,
 				"w": 156,
 				"h": 156
 			},
@@ -42,8 +42,48 @@
 		},
 		"eye.png": {
 			"frame": {
-				"x": 284,
+				"x": 289,
+				"y": 1,
+				"w": 128,
+				"h": 128
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
 				"y": 0,
+				"w": 128,
+				"h": 128
+			},
+			"sourceSize": {
+				"w": 128,
+				"h": 128
+			}
+		},
+		"flip.png": {
+			"frame": {
+				"x": 419,
+				"y": 1,
+				"w": 128,
+				"h": 128
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 128,
+				"h": 128
+			},
+			"sourceSize": {
+				"w": 128,
+				"h": 128
+			}
+		},
+		"flip-close.png": {
+			"frame": {
+				"x": 549,
+				"y": 1,
 				"w": 128,
 				"h": 128
 			},
@@ -62,8 +102,8 @@
 		},
 		"game-title.png": {
 			"frame": {
-				"x": 0,
-				"y": 156,
+				"x": 1,
+				"y": 159,
 				"w": 1104,
 				"h": 378
 			},
@@ -80,10 +120,50 @@
 				"h": 378
 			}
 		},
+		"info.png": {
+			"frame": {
+				"x": 679,
+				"y": 1,
+				"w": 128,
+				"h": 128
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 128,
+				"h": 128
+			},
+			"sourceSize": {
+				"w": 128,
+				"h": 128
+			}
+		},
+		"info-close.png": {
+			"frame": {
+				"x": 809,
+				"y": 1,
+				"w": 128,
+				"h": 128
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 128,
+				"h": 128
+			},
+			"sourceSize": {
+				"w": 128,
+				"h": 128
+			}
+		},
 		"logo.png": {
 			"frame": {
-				"x": 0,
-				"y": 534,
+				"x": 1,
+				"y": 539,
 				"w": 256,
 				"h": 256
 			},
@@ -102,8 +182,8 @@
 		},
 		"menu.png": {
 			"frame": {
-				"x": 412,
-				"y": 0,
+				"x": 939,
+				"y": 1,
 				"w": 128,
 				"h": 128
 			},
@@ -122,8 +202,8 @@
 		},
 		"mute.png": {
 			"frame": {
-				"x": 540,
-				"y": 0,
+				"x": 259,
+				"y": 539,
 				"w": 128,
 				"h": 128
 			},
@@ -142,8 +222,8 @@
 		},
 		"play.png": {
 			"frame": {
-				"x": 256,
-				"y": 534,
+				"x": 389,
+				"y": 539,
 				"w": 192,
 				"h": 192
 			},
@@ -162,8 +242,8 @@
 		},
 		"volume.png": {
 			"frame": {
-				"x": 668,
-				"y": 0,
+				"x": 583,
+				"y": 539,
 				"w": 128,
 				"h": 128
 			},
@@ -187,8 +267,8 @@
 		"image": "spritesheet.png",
 		"format": "RGBA8888",
 		"size": {
-			"w": 1104,
-			"h": 790
+			"w": 1106,
+			"h": 796
 		},
 		"scale": "1"
 	}
